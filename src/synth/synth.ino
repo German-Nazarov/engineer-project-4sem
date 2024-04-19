@@ -7,6 +7,7 @@ Oscil <SIN2048_NUM_CELLS, AUDIO_RATE> aSin(SIN2048_DATA);
 
 // use #define for CONTROL_RATE, not a constant
 #define CONTROL_RATE 64 // Hz, powers of 2 are most reliable
+// не занимать пин GP0
 #define BTN_1 16
 #define BTN_2 17
 #define BTN_3 18
@@ -18,11 +19,22 @@ Oscil <SIN2048_NUM_CELLS, AUDIO_RATE> aSin(SIN2048_DATA);
 #define BTN_9 27
 #define BTN_10 28
 #define BTN_11 14
-#define BTN_12 15
+#define BTN_12 13
 
-const float Octave_1[12] = 
-  {261.6256,	277.1826,	293.6648,	311.127,	329.6276,	349.2282,	369.9944,	391.9954,	415.3047,	440,	466.1638,	493.8833};
+float Octave_big[12] = {65.4064,	69.2957,	73.4162,	77.7817,	82.4069,	87.3071,	92.4986,	97.9989,	103.8262,	110,	116.5409,	123.4708};
+float Octave_small[12] = {130.8128,	138.5913,	146.8324,	155.5635,	164.8138,	174.6141,	184.9972,	195.9977,	207.6523,	220,	233.0819,	246.9417};
+float Octave_1[12] = {261.6256,	277.1826,	293.6648,	311.127,	329.6276,	349.2282,	369.9944,	391.9954,	415.3047,	440,	466.1638,	493.8833};
+float Octave_2[12] = {523.2511,	554.3653,	587.3295,	622.254,	659.2551,	698.4565,	739.9888,	783.9909,	830.6094,	880,	932.3275,	987.7666};
+float Octave_3[12] = {1046.5023,	1108.7305,	1174.6591,	1244.5079,	1318.5102,	1396.9129,	1479.9777,	1567.9817,	1661.2188,	1760,	1864.655,	1975.5332};
 
+// float Octaves[5][12] = {0};
+// for(size_t i =0; i < 12; i++){
+//       Octaves[0][i] = Octave_big[i];
+//       Octaves[1][i] = Octave_small[i];
+//       Octaves[2][i] = Octave_1[i];
+//       Octaves[3][i] = Octave_2[i];
+//       Octaves[4][i] = Octave_3[i];
+// }
 
 void setup(){
   startMozzi(CONTROL_RATE); // :)
