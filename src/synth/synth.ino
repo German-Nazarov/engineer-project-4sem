@@ -1,11 +1,26 @@
 #include <MozziGuts.h>
 #include <Oscil.h> // oscillator template
 #include <tables/sin2048_int8.h> // sine table for oscillator
+#include <tables/sin8192_int8.h>
 
 // use: Oscil <table_size, update_rate> oscilName (wavetable), look in .h file of table #included above
-Oscil <SIN2048_NUM_CELLS, AUDIO_RATE> aSin(SIN2048_DATA);
+// default here is SIN2048_NUM_CELLS and SIN2048_DATA
+  // Oscil <SIN8192_NUM_CELLS, AUDIO_RATE> aSin(SIN8192_DATA);
+// This Oscil will be operating as an audio generator, so the update rate will be AUDIO_RATE
+Oscil <SIN2048_NUM_CELLS, AUDIO_RATE> aSin1(SIN2048_DATA);
+Oscil <SIN2048_NUM_CELLS, AUDIO_RATE> aSin2(SIN2048_DATA);
+Oscil <SIN2048_NUM_CELLS, AUDIO_RATE> aSin3(SIN2048_DATA);
+Oscil <SIN2048_NUM_CELLS, AUDIO_RATE> aSin4(SIN2048_DATA);
+Oscil <SIN2048_NUM_CELLS, AUDIO_RATE> aSin5(SIN2048_DATA);
+Oscil <SIN2048_NUM_CELLS, AUDIO_RATE> aSin6(SIN2048_DATA);
+Oscil <SIN2048_NUM_CELLS, AUDIO_RATE> aSin7(SIN2048_DATA);
+Oscil <SIN2048_NUM_CELLS, AUDIO_RATE> aSin8(SIN2048_DATA);
+Oscil <SIN2048_NUM_CELLS, AUDIO_RATE> aSin9(SIN2048_DATA);
+Oscil <SIN2048_NUM_CELLS, AUDIO_RATE> aSin10(SIN2048_DATA);
+Oscil <SIN2048_NUM_CELLS, AUDIO_RATE> aSin11(SIN2048_DATA);
+Oscil <SIN2048_NUM_CELLS, AUDIO_RATE> aSin12(SIN2048_DATA);
 
-// use #define for CONTROL_RATE, not a constant
+// CONTROL_RATE specifies how frequently update_control() is executed
 #define CONTROL_RATE 64 // Hz, powers of 2 are most reliable
 // не занимать пин GP0
 #define OCT_BIG 12
@@ -34,29 +49,32 @@ float Octave_2[12] = {523.2511,	554.3653,	587.3295,	622.254,	659.2551,	698.4565,
 float Octave_3[12] = {1046.5023,	1108.7305,	1174.6591,	1244.5079,	1318.5102,	1396.9129,	1479.9777,	1567.9817,	1661.2188,	1760,	1864.655,	1975.5332};
 
 float Octaves[5][12] = {0};
-for(size_t i =0; i < 12; i++){
-Octaves[0][i] = Octave_big[i];
-Octaves[1][i] = Octave_small[i];
-Octaves[2][i] = Octave_1[i];
-Octaves[3][i] = Octave_2[i];
-Octaves[4][i] = Octave_3[i];
+void setup_octave_table() {
+  for(size_t i = 0; i < 12; i++) {
+    Octaves[0][i] = Octave_big[i];
+    Octaves[1][i] = Octave_small[i];
+    Octaves[2][i] = Octave_1[i];
+    Octaves[3][i] = Octave_2[i];
+    Octaves[4][i] = Octave_3[i];
+  }
 }
 
 void setup(){
     startMozzi(CONTROL_RATE); // :)
+    // startMozzi() sets up an interrupt for audio output at a sample rate of 16384 Hz.
     /*This sets up one timer to call updateControl() at the rate chosen and
     another timer which works behind the scenes to send audio samples to the output pin at the fixed rate of
     16384 Hz.
     */
-    aSin.setFreq(440); // set the frequency
+    //aSin.setFreq(440); // set the frequency
 
     Serial.begin(9600);
     // Смотрим какая октава выбрана
     pinMode(OCT_1, INPUT_PULLUP);
     pinMode(OCT_2, INPUT_PULLUP);
     pinMode(OCT_3, INPUT_PULLUP);
-    pinMode(OCT_4, INPUT_PULLUP);
-    pinMode(OCT_5, INPUT_PULLUP);
+    pinMode(OCT_BIG, INPUT_PULLUP);
+    pinMode(OCT_SMALL, INPUT_PULLUP);
 
     // Смотрим какие клавиши нажаты
     pinMode(BTN_1, INPUT_PULLUP);
@@ -71,13 +89,16 @@ void setup(){
     pinMode(BTN_10, INPUT_PULLUP);
     pinMode(BTN_11, INPUT_PULLUP);
     pinMode(BTN_12, INPUT_PULLUP);
+
+    setup_octave_table();
 }
 
-
-int freq_to_set = 0;
 int index_Octave = 0;
+int freq_to_set[12] = {0};
+int number_of_active_keys = 0;
 void updateControl(){
-    freq_to_set = 0;
+    freq_to_set[12] = {0};
+    number_of_active_keys = 0;
     // put changing controls in here
 
     // changing octave
@@ -104,63 +125,101 @@ void updateControl(){
 
     // changing keys
     if (!digitalRead(BTN_1)) {
-        freq_to_set = Octaves[index_Octave][0];
+        freq_to_set[0] = Octaves[index_Octave][0];
+        number_of_active_keys++;
         Serial.println("on btn1");
     }
     if (!digitalRead(BTN_2)) {
-        freq_to_set = Octaves[index_Octave][1];
+        freq_to_set[1] = Octaves[index_Octave][1];
+        number_of_active_keys++;
         Serial.println("on btn2");
     }
     if (!digitalRead(BTN_3)) {
-        freq_to_set = Octaves[index_Octave][2];
+        freq_to_set[2] = Octaves[index_Octave][2];
+        number_of_active_keys++;
         Serial.println("on btn3");
     }
     if (!digitalRead(BTN_4)) {
-        freq_to_set = Octaves[index_Octave][3];
+        freq_to_set[3] = Octaves[index_Octave][3];
+        number_of_active_keys++;
         Serial.println("on btn4");
     }
     if (!digitalRead(BTN_5)) {
-        freq_to_set = Octaves[index_Octave][4];
+        freq_to_set[4] = Octaves[index_Octave][4];
+        number_of_active_keys++;
         Serial.println("on btn5");
     }
     if (!digitalRead(BTN_6)) {
-        freq_to_set = Octaves[index_Octave][5];
+        freq_to_set[5] = Octaves[index_Octave][5];
+        number_of_active_keys++;
         Serial.println("on btn6");
     }
     if (!digitalRead(BTN_7)) {
-        freq_to_set = Octaves[index_Octave][6];
+        freq_to_set[6] = Octaves[index_Octave][6];
+        number_of_active_keys++;
         Serial.println("on btn7");
     }
     if (!digitalRead(BTN_8)) {
-        freq_to_set = Octaves[index_Octave][7];
+        freq_to_set[7] = Octaves[index_Octave][7];
+        number_of_active_keys++;
         Serial.println("on btn8");
     }
     if (!digitalRead(BTN_9)) {
-        freq_to_set = Octaves[index_Octave][8];
+        freq_to_set[8] = Octaves[index_Octave][8];
+        number_of_active_keys++;
         Serial.println("on btn9");
     }
     if (!digitalRead(BTN_10)) {
-        freq_to_set = Octaves[index_Octave][9];
+        freq_to_set[9] = Octaves[index_Octave][9];
+        number_of_active_keys++;
         Serial.println("on btn10");
     }
     if (!digitalRead(BTN_11)) {
-        freq_to_set = Octaves[index_Octave][10];
+        freq_to_set[10] = Octaves[index_Octave][10];
+        number_of_active_keys++;
         Serial.println("on btn11");
     }
     if (!digitalRead(BTN_12)) {
-        freq_to_set = Octaves[index_Octave][11];
+        freq_to_set[11] = Octaves[index_Octave][11];
+        number_of_active_keys++;
         Serial.println("on btn12");
     }
 
-    aSin1.setFreq(freq_to_set);
+    aSin1.setFreq(freq_to_set[0]);
+    aSin2.setFreq(freq_to_set[1]);
+    aSin3.setFreq(freq_to_set[2]);
+    aSin4.setFreq(freq_to_set[3]);
+    aSin5.setFreq(freq_to_set[4]);
+    aSin6.setFreq(freq_to_set[5]);
+    aSin7.setFreq(freq_to_set[6]);
+    aSin8.setFreq(freq_to_set[7]);
+    aSin9.setFreq(freq_to_set[8]);
+    aSin10.setFreq(freq_to_set[9]);
+    aSin11.setFreq(freq_to_set[10]);
+    aSin12.setFreq(freq_to_set[11]);
+
+    //aSin.setFreq(freq_to_set);
 }
 
 
 AudioOutput_t updateAudio(){
-    return MonoOutput::from8Bit(aSin.next()); // return an int signal centred around 0
+  int16_t All_signal;
+  if (number_of_active_keys != 0) {
+        All_signal = (aSin1.next() + aSin2.next() + aSin3.next() + aSin4.next() + aSin5.next() + aSin6.next() +
+                      aSin7.next() + aSin8.next() + aSin9.next() + aSin10.next() + aSin11.next() + aSin12.next()) /
+                     number_of_active_keys;
+  }
+  else{ 
+    All_signal = 0;
+  }
+    return MonoOutput::from8Bit(All_signal); // return an int signal centred around 0
+
+  //  return MonoOutput::from8Bit(aSin.next()); // return an int signal centred around 0
+    // Oscil’s next() method returns a signed 8 bit value from the oscillator’s wavetable.
+    // The int return value of updateAudio() must be in the range -244 to 243 in Mozzi’s default STANDARD audio mode.
 }
 
 
 void loop(){
     audioHook(); // required here
-}
+ }
