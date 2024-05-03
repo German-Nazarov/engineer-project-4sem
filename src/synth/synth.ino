@@ -2,11 +2,18 @@
 #include <Oscil.h> // oscillator template
 #include <tables/sin2048_int8.h> // sine table for oscillator
 #include <tables/sin8192_int8.h>
+#include <tables/saw8192_int8.h>
+#include <tables/smoothsquare8192_int8.h>
+#include <tables/square_analogue512_int8.h>
 
 // use: Oscil <table_size, update_rate> oscilName (wavetable), look in .h file of table #included above
 // default here is SIN2048_NUM_CELLS and SIN2048_DATA
 //Oscil <SIN8192_NUM_CELLS, AUDIO_RATE> aSin(SIN8192_DATA);
-Oscil <SIN2048_NUM_CELLS, AUDIO_RATE> aSin(SIN2048_DATA);
+// Oscil <SIN2048_NUM_CELLS, AUDIO_RATE> aSin(SIN2048_DATA);
+Oscil <SAW8192_NUM_CELLS, AUDIO_RATE> aSin(SAW8192_DATA);
+//Oscil <SMOOTHSQUARE8192_NUM_CELLS, AUDIO_RATE> aSin(SMOOTHSQUARE8192_DATA);
+//Oscil <SQUARE_ANALOGUE512_NUM_CELLS, AUDIO_RATE> aSin(SQUARE_ANALOGUE512_DATA);
+
 // This Oscil will be operating as an audio generator, so the update rate will be AUDIO_RATE
 Oscil <SIN2048_NUM_CELLS, AUDIO_RATE> aSin1(SIN2048_DATA);
 Oscil <SIN2048_NUM_CELLS, AUDIO_RATE> aSin2(SIN2048_DATA);
@@ -42,6 +49,10 @@ Oscil <SIN2048_NUM_CELLS, AUDIO_RATE> aSin12(SIN2048_DATA);
 #define BTN_10 28
 #define BTN_11 14
 #define BTN_12 13
+
+#define SIN_BTN 2
+#define SAW_BTN 3
+#define SQR_BTN 4 
 
 float Octave_big[12] = {65.4064,	69.2957,	73.4162,	77.7817,	82.4069,	87.3071,	92.4986,	97.9989,	103.8262,	110,	116.5409,	123.4708};
 float Octave_small[12] = {130.8128,	138.5913,	146.8324,	155.5635,	164.8138,	174.6141,	184.9972,	195.9977,	207.6523,	220,	233.0819,	246.9417};
@@ -98,8 +109,8 @@ int index_Octave = 0;
 //int freq_to_set[12] = {0};
 int freq_to_set = 0;
 int number_of_active_keys = 0;
-bool isPlaying = false;
 void updateControl(){
+    freq_to_set = 0;
     //freq_to_set[12] = {0};
     number_of_active_keys = 0;
     // put changing controls in here
@@ -207,7 +218,6 @@ void updateControl(){
 
     aSin.setFreq(freq_to_set);
 }
-
 
 AudioOutput_t updateAudio(){
   // int8_t All_signal;
