@@ -37,18 +37,19 @@ Oscil <SIN2048_NUM_CELLS, AUDIO_RATE> aSin12(SIN2048_DATA);
 #define OCT_2 9
 #define OCT_3 8
 
-#define BTN_1 16
-#define BTN_2 17
-#define BTN_3 18
-#define BTN_4 19
-#define BTN_5 20
-#define BTN_6 21
-#define BTN_7 22
-#define BTN_8 26
-#define BTN_9 27
-#define BTN_10 28
-#define BTN_11 14
-#define BTN_12 13
+#define BTN_1 12
+#define BTN_2 11
+#define BTN_3 9
+#define BTN_4 10
+#define BTN_5 8
+#define BTN_6 7
+#define BTN_7 6
+#define BTN_8 4
+#define BTN_9 5
+#define BTN_10 21
+#define BTN_11 22
+#define BTN_12 27
+#define BTN_13 26
 
 #define SIN_BTN 2
 #define SAW_BTN 3
