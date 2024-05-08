@@ -5,6 +5,8 @@
 #include <tables/smoothsquare8192_int8.h>
 #include "synth.h"
 
+#define DEBUG
+
 // use: Oscil <table_size, update_rate> oscilName (wavetable), look in .h file of table #included above
 // default here is SIN2048_NUM_CELLS and SIN2048_DATA
 Oscil <SIN8192_NUM_CELLS, AUDIO_RATE> aSIN(SIN8192_DATA);
@@ -27,7 +29,9 @@ void setup(){
   aSAW.setFreq(440);
   aSQR.setFreq(440);
 
+  #ifdef DEBUG
   Serial.begin(9600); // begin Serial com for debugging purposes
+  #endif
 
   setup_button_pins();
   setup_octave_table();
@@ -42,91 +46,133 @@ void updateControl() {
   // changing octave
   if (!digitalRead(OCT_BIG)) {
     index_Octave = 0;
+    #ifdef DEBUG
     Serial.println("Big Octave");
+    #endif
   }
   if (!digitalRead(OCT_SMALL)) {
     index_Octave = 1;
+    #ifdef DEBUG
     Serial.println("Small Octave");
+    #endif
   }
   if (!digitalRead(OCT_1)) {
     index_Octave = 2;
+    #ifdef DEBUG
     Serial.println("1 Octave");
+    #endif
   }
   if (!digitalRead(OCT_2)) {
     index_Octave = 3;
+    #ifdef DEBUG
     Serial.println("2 Octave");
+    #endif
   }
   if (!digitalRead(OCT_3)) {
     index_Octave = 4;
+    #ifdef DEBUG
     Serial.println("3 Octave");
+    #endif
   }
 
   // changing keys
   if (!digitalRead(BTN_1)) {
     freq_to_set = Octaves[index_Octave][0];
+    #ifdef DEBUG
     Serial.println("on btn1");
+    #endif
   }
   if (!digitalRead(BTN_2)) {
     freq_to_set = Octaves[index_Octave][1];
+    #ifdef DEBUG
     Serial.println("on btn2");
+    #endif
   }
   if (!digitalRead(BTN_3)) {
     freq_to_set = Octaves[index_Octave][2];
+    #ifdef DEBUG
     Serial.println("on btn3");
+    #endif
   }
   if (!digitalRead(BTN_4)) {
     freq_to_set = Octaves[index_Octave][3];
+    #ifdef DEBUG
     Serial.println("on btn4");
+    #endif
   }
   if (!digitalRead(BTN_5)) {
     freq_to_set = Octaves[index_Octave][4];
+    #ifdef DEBUG
     Serial.println("on btn5");
+    #endif
   }
   if (!digitalRead(BTN_6)) {
     freq_to_set = Octaves[index_Octave][5];
+    #ifdef DEBUG
     Serial.println("on btn6");
+    #endif
   }
   if (!digitalRead(BTN_7)) {
     freq_to_set = Octaves[index_Octave][6];
+    #ifdef DEBUG
     Serial.println("on btn7");
+    #endif
   }
   if (!digitalRead(BTN_8)) {
     freq_to_set = Octaves[index_Octave][7];
+    #ifdef DEBUG
     Serial.println("on btn8");
+    #endif
   }
   if (!digitalRead(BTN_9)) {
     freq_to_set = Octaves[index_Octave][8];
+    #ifdef DEBUG
     Serial.println("on btn9");
+    #endif
   }
   if (!digitalRead(BTN_10)) {
     freq_to_set = Octaves[index_Octave][9];
+    #ifdef DEBUG
     Serial.println("on btn10");
+    #endif
   }
   if (!digitalRead(BTN_11)) {
     freq_to_set = Octaves[index_Octave][10];
+    #ifdef DEBUG
     Serial.println("on btn11");
+    #endif
   }
   if (!digitalRead(BTN_12)) {
     freq_to_set = Octaves[index_Octave][11];
+    #ifdef DEBUG
     Serial.println("on btn12");
+    #endif
   }
   if (!digitalRead(BTN_13)) {
     freq_to_set = Octaves[index_Octave][12];
+    #ifdef DEBUG
     Serial.println("on btn13");
+    #endif
   }
 
   // changing type of output signal
   if (!digitalRead(SIN_BTN)) {
     k = mode::SIN;
+    #ifdef DEBUG
     Serial.println("SIN");
+    #endif
   }
   if (!digitalRead(SAW_BTN)) {
     k = mode::SAW;
+    #ifdef DEBUG
     Serial.println("SAW");
+    #endif
   }
   if (!digitalRead(SQR_BTN)) {
     k = mode::SQR;
+    #ifdef DEBUG
     Serial.println("SQR");
+    #endif
   }
 
   aSIN.setFreq(freq_to_set);
