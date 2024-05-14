@@ -5,7 +5,7 @@
 #include <tables/smoothsquare8192_int8.h>
 #include "synth.h"
 
-#define DEBUG
+// #define DEBUG
 
 // use: Oscil <table_size, update_rate> oscilName (wavetable), look in .h file of table #included above
 // default here is SIN2048_NUM_CELLS and SIN2048_DATA
@@ -15,7 +15,7 @@ Oscil <SMOOTHSQUARE8192_NUM_CELLS, AUDIO_RATE> aSQR(SMOOTHSQUARE8192_DATA);
 // CONTROL_RATE specifies how frequently update_control() is executed
 #define CONTROL_RATE 64           // Hz, powers of 2 are most reliable
 enum mode { NONE, SIN, SAW, SQR };
-int k = mode::NONE;               // индекс, по которому определяем какой сигнал на выходе
+int k = mode::SIN;               // индекс, по которому определяем какой сигнал на выходе
 
 float Octaves[5][13] = {0};
 void setup(){
