@@ -9,7 +9,7 @@ DIY синтезатор, разработанный и собранный ко�
 - __body/__ - файлы компонентов корпуса, используется CorelDraw 
 - __archive/__ - исходный код проекта на начальном этапе разработки
 ## Полезные ссылки
-- Приветсвенная [презентация](https://docs.google.com/presentation/d/1jiTuCDYLhv5Om5ewJSXBUfSQBudySQsCCXH7HL0cz3s/edit?usp=sharing) проекта
+- Приветственная [презентация](https://docs.google.com/presentation/d/1jiTuCDYLhv5Om5ewJSXBUfSQBudySQsCCXH7HL0cz3s/edit?usp=sharing) проекта
 - Финальная [презентация](https://drive.google.com/file/d/13GRy12x8nt7UOJpUng1tQ2erg40VcWlq/view?usp=sharing) c __защиты__ проекта
 - Telegram-канал [ФАКТ.Синтезатор](https://t.me/DIY_Synth)
 - Raspberry Pi Pico [распиновка](https://www.raspberrypi.com/documentation/microcontrollers/images/pico-pinout.svg)
